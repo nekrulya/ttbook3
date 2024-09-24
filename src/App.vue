@@ -1,13 +1,19 @@
 <template>
   <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <router-link to="/home">Home</router-link> |
+    <router-link to="/auth">Auth</router-link> |
+    <router-link to="/GoogleDocTest">GoogleDocTest</router-link> |
+    <router-link to="/userlist">UserList</router-link> |
+    <a href="http://192.168.102.201:8000/docs">backend docs</a>
   </nav>
-  <router-view/>
+  <router-view />
 </template>
 
 <style>
+@import "../public/css/main.css";
+
 #app {
+  min-height: 100vh;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

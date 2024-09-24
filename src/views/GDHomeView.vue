@@ -1,17 +1,17 @@
 <template>
   <Header />
-  <EmptyBook />
+  <GDBook />
 </template>
 
 <script>
 import Header from "@/components/Header.vue";
-import EmptyBook from "@/components/EmptyComponents/EmptyBook.vue";
+import GDBook from "@/components/GoogleDocComponents/GDBook.vue";
 
 export default {
   name: "HomeView",
   components: {
     Header,
-    EmptyBook,
+    GDBook,
   },
 };
 </script>
