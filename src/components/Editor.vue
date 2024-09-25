@@ -128,51 +128,63 @@ class MyUploadAdapter {
 
   upload() {
     return new Promise((resolve, reject) => {
-        const data = new FormData();
-        
-        // Добавляем файл в FormData
-        this.loader.file.then((file) => {
-            data.append('upload', file);
+      // Начнем с добавления лога для проверки, что загрузка начинается
+      console.log("Начало загрузки файла...");
 
-            // Получаем токен аутентификации (если он нужен для API)
-            // const token = localStorage.getItem("token"); // Предположим, что токен хранится в localStorage
+      // Получаем файл
+      this.loader.file
+        .then((file) => {
+          const data = new FormData();
+          data.append("upload", file); // Добавляем файл в FormData
 
-            const token = localStorage.getItem("accessToken");
+          // Логируем тип и размер файла
+          console.log("Файл:", file.name, "Тип:", file.type, "Размер:", file.size);
 
-            // Используем axios для отправки файла
-            axios({
-                method: "post",
-                url: "http://192.168.102.201:8000/file/upload", // URL для загрузки файла
-                data: data, // Данные в формате FormData
-                headers: {
-                    // Заголовок "Content-Type" не указываем вручную, FormData установит его автоматически
-                    'Content-Type': 'multipart/form-data',
-                    "Access-Control-Allow-Origin": "*", // Добавляем токен в заголовок
-                    Authorization: `Bearer ` + token,
-                }
-            })
+          // Получаем токен аутентификации (если он нужен для API)
+          const token = localStorage.getItem("accessToken");
+
+          // Используем axios для отправки файла
+          axios({
+            method: "post",
+            url: "http://192.168.102.201:8000/file/upload", // URL для загрузки файла
+            data: data, // Данные в формате FormData
+            headers: {
+              Authorization: `Bearer ${token}`, // Добавляем токен в заголовок
+            },
+            // Отлавливаем прогресс загрузки (опционально)
+            onUploadProgress: (progressEvent) => {
+              const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+              console.log(`Загружено: ${percentCompleted}%`);
+            },
+          })
             .then((response) => {
-                // Выводим URL, полученный от сервера
-                console.log("URL изображения:", response.data.url);
+              // Логируем успешный ответ сервера
+              console.log("Загрузка завершена. Ответ сервера:", response.data);
 
-                // Передаем URL в CKEditor для вставки изображения
-                resolve({
-                    default: response.data.url // URL изображения, который вернул сервер
-                });
+              // Передаем URL в CKEditor для вставки изображения
+              resolve({
+                default: response.data.url, // URL изображения, который вернул сервер
+              });
             })
             .catch((error) => {
-                // Обрабатываем ошибку
-                console.log("Ошибка загрузки:", error);
-                reject(error);
+              // Логируем ошибку, если что-то пошло не так
+              console.error("Ошибка загрузки:", error);
+              reject(error);
             });
+        })
+        .catch((error) => {
+          console.error("Ошибка получения файла:", error);
+          reject(error);
         });
     });
-}
+  }
 
   abort() {
     // Логика отмены загрузки
+    console.log("Загрузка отменена.");
   }
 }
+
 
 export default {
   props: {},
