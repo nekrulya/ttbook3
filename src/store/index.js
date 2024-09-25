@@ -42,6 +42,7 @@ export default createStore({
       updateUser: "user/update/",
       changeUserPasswordById: "user/changePass/",
       addUser: "user/add",
+      uploadImage: "file/upload",
     },
     file: {
       name: "Без названия",

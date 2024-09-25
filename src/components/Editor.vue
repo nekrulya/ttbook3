@@ -113,6 +113,67 @@ import {
 import translations from "ckeditor5/translations/ru.js";
 
 import "ckeditor5/ckeditor5.css";
+import axios from "axios";
+
+function MyCustomUploadAdapterPlugin(editor) {
+  editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+    return new MyUploadAdapter(loader);
+  };
+}
+
+class MyUploadAdapter {
+  constructor(loader) {
+    this.loader = loader;
+  }
+
+  upload() {
+    return new Promise((resolve, reject) => {
+        const data = new FormData();
+        
+        // Добавляем файл в FormData
+        this.loader.file.then((file) => {
+            data.append('upload', file);
+
+            // Получаем токен аутентификации (если он нужен для API)
+            // const token = localStorage.getItem("token"); // Предположим, что токен хранится в localStorage
+
+            const token = localStorage.getItem("accessToken");
+
+            // Используем axios для отправки файла
+            axios({
+                method: "post",
+                url: "http://192.168.102.201:8000/file/upload", // URL для загрузки файла
+                data: data, // Данные в формате FormData
+                headers: {
+                    // Заголовок "Content-Type" не указываем вручную, FormData установит его автоматически
+                    'Content-Type': 'multipart/form-data',
+                    "Access-Control-Allow-Origin": "*", // Добавляем токен в заголовок
+                    Authorization: `Bearer ` + token,
+                }
+            })
+            .then((response) => {
+                // Выводим URL, полученный от сервера
+                console.log("URL изображения:", response.data.url);
+
+                // Передаем URL в CKEditor для вставки изображения
+                resolve({
+                    default: response.data.url // URL изображения, который вернул сервер
+                });
+            })
+            .catch((error) => {
+                // Обрабатываем ошибку
+                console.log("Ошибка загрузки:", error);
+                reject(error);
+            });
+        });
+    });
+}
+
+  abort() {
+    // Логика отмены загрузки
+  }
+}
+
 export default {
   props: {},
   data() {
@@ -132,6 +193,7 @@ export default {
     ...mapState({
       file: (state) => state.file,
       HTMLWithSelectors: (state) => state.HTMLWithSelectors,
+      api: (state) => state.api,
     }),
     ...mapGetters({ getFileCode: "getFileCode" }),
   },
@@ -199,6 +261,7 @@ export default {
         ],
         shouldNotGroupWhenFull: false,
       },
+      extraPlugins: [ MyCustomUploadAdapterPlugin ],
       plugins: [
         AccessibilityHelp,
         Alignment,
@@ -366,6 +429,9 @@ export default {
     this.isLayoutReady = true;
   },
 };
+
+
+
 </script>
 
 <style>
