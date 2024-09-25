@@ -116,7 +116,7 @@ import "ckeditor5/ckeditor5.css";
 import axios from "axios";
 
 function MyCustomUploadAdapterPlugin(editor) {
-  editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+  editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
     return new MyUploadAdapter(loader);
   };
 }
@@ -135,10 +135,17 @@ class MyUploadAdapter {
       this.loader.file
         .then((file) => {
           const data = new FormData();
-          data.append("upload", file); // Добавляем файл в FormData
+          data.append("file", file); // Добавляем файл в FormData
 
           // Логируем тип и размер файла
-          console.log("Файл:", file.name, "Тип:", file.type, "Размер:", file.size);
+          console.log(
+            "Файл:",
+            file.name,
+            "Тип:",
+            file.type,
+            "Размер:",
+            file.size
+          );
 
           // Получаем токен аутентификации (если он нужен для API)
           const token = localStorage.getItem("accessToken");
@@ -153,7 +160,9 @@ class MyUploadAdapter {
             },
             // Отлавливаем прогресс загрузки (опционально)
             onUploadProgress: (progressEvent) => {
-              const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+              const percentCompleted = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total
+              );
               console.log(`Загружено: ${percentCompleted}%`);
             },
           })
@@ -184,7 +193,6 @@ class MyUploadAdapter {
     console.log("Загрузка отменена.");
   }
 }
-
 
 export default {
   props: {},
@@ -273,7 +281,7 @@ export default {
         ],
         shouldNotGroupWhenFull: false,
       },
-      extraPlugins: [ MyCustomUploadAdapterPlugin ],
+      extraPlugins: [MyCustomUploadAdapterPlugin],
       plugins: [
         AccessibilityHelp,
         Alignment,
@@ -441,9 +449,6 @@ export default {
     this.isLayoutReady = true;
   },
 };
-
-
-
 </script>
 
 <style>
