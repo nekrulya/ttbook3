@@ -137,15 +137,7 @@ class MyUploadAdapter {
           const data = new FormData();
           data.append("file", file); // Добавляем файл в FormData
 
-          // Логируем тип и размер файла
-          console.log(
-            "Файл:",
-            file.name,
-            "Тип:",
-            file.type,
-            "Размер:",
-            file.size
-          );
+          
 
           // Получаем токен аутентификации (если он нужен для API)
           const token = localStorage.getItem("accessToken");
