@@ -1,20 +1,28 @@
 <template>
   <Header />
-  <Book />
+  <div class="book">
+    <Scrollbar />
+    <Content />
+    <div class="emptyHeadings"></div>
+  </div>
 </template>
 
 <script>
 import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 import axios from "axios";
 import Header from "@/components/Header.vue";
-import Book from "@/components/EditSectionViewer/Book.vue";
+import Scrollbar from "@/components/Scrollbar.vue";
+import Content from "@/components/EditSectionViewer/Content.vue";
+import Headings from "@/components/Headings.vue";
 
 export default {
   name: "EditSectionView",
   props: ["section_id"],
   components: {
     Header,
-    Book,
+    Scrollbar,
+    Content,
+    Headings,
   },
 
   computed: {
@@ -26,11 +34,11 @@ export default {
 
   methods: {
     ...mapMutations({
-      setSection: 'setSection',
-      setFilesWithoutSection: 'setFilesWithoutSection',
+      setSection: "setSection",
+      setFilesWithoutSection: "setFilesWithoutSection",
     }),
 
-    loading(){
+    loading() {
       const token = localStorage.accessToken;
 
       axios({
@@ -70,19 +78,34 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
-    }
+    },
   },
 
   updated() {
     this.$nextTick(() => {
-      this.loading()
+      this.loading();
     });
   },
 
   mounted() {
     this.$nextTick(() => {
-      this.loading()
+      this.loading();
     });
   },
 };
 </script>
+
+<style scoped>
+.emptyHeadings {
+  width: 100%;
+  max-width: 272px;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  border-left: 2px solid #d9d9d9;
+  border-radius: 0.5px;
+  padding-left: 15px;
+}
+</style>

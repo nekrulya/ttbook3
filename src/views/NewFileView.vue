@@ -1,19 +1,27 @@
 <template>
   <Header />
-  <Book />
+  <div class="book">
+    <PageNamesScrollbar />
+    <Content />
+    <Headings />
+  </div>
 </template>
 
 <script>
 import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 import Header from "@/components/Header.vue";
-import Book from "@/components/NewFileViewer/Book.vue";
+import PageNamesScrollbar from "@/components/Scrollbar.vue";
+import Content from "@/components/NewFileViewer/Content.vue";
+import Headings from "@/components/Headings.vue";
 
 export default {
   name: "NewFileView",
   props: ["section_id"],
   components: {
     Header,
-    Book,
+    PageNamesScrollbar,
+    Content,
+    Headings,
   },
   methods: {
     ...mapMutations({

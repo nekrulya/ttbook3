@@ -1,20 +1,28 @@
 <template>
   <Header />
-  <Book />
+  <div class="book">
+    <Scrollbar />
+    <Content />
+    <Headings />
+  </div>
 </template>
 
 <script>
 import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 import axios from "axios";
 import Header from "@/components/Header.vue";
-import Book from "@/components/FileViewer/Book.vue";
+import Scrollbar from "@/components/Scrollbar.vue";
+import Content from "@/components/FileViewer/Content.vue";
+import Headings from "@/components/Headings.vue";
 
 export default {
   name: "HomeView",
   props: ["file_id"],
   components: {
     Header,
-    Book,
+    Scrollbar,
+    Content,
+    Headings,
   },
 
   computed: {

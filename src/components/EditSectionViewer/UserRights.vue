@@ -149,76 +149,100 @@ export default {
         });
     },
 
-    openDepartments(e) {
-      const token = localStorage.accessToken;
+    openDepartments(event) {
+      if (event.target.getAttribute("open") === "false") {
+        event.target.setAttribute("open", "true");
+        event.target.style.transform = "rotate(-90deg)";
 
-      axios({
-        method: "get",
-        url: this.api.getDepartments + e.target.id,
-        params: {},
-        data: {},
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          Authorization: `Bearer ` + token,
-        },
-      })
-        .then((response) => {
-          console.log(response);
-          let departments = response.data;
-          console.log(departments);
-          this.setDepartments([e.target.id, departments]);
+        const token = localStorage.accessToken;
+        axios({
+          method: "get",
+          url: this.api.getDepartments + event.target.id,
+          params: {},
+          data: {},
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ` + token,
+          },
         })
-        .catch(function (error) {
-          console.log(error);
-        });
+          .then((response) => {
+            let departments = response.data;
+            this.setDepartments([event.target.id, departments]);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      } else {
+        event.target.setAttribute("open", "false");
+        event.target.style.transform = "rotate(0deg)";
+        this.setDepartments(event.target.id, []);
+      }
     },
 
     openPositions(company, event) {
-      const token = localStorage.accessToken;
+      if (event.target.getAttribute("open") === "false") {
+        event.target.setAttribute("open", "true");
+        event.target.style.transform = "rotate(-90deg)";
 
-      axios({
-        method: "get",
-        url: this.api.getPositions + event.target.id,
-        params: {},
-        data: {},
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          Authorization: `Bearer ` + token,
-        },
-      })
-        .then((response) => {
-          let positions = response.data;
-          this.setPositions([company.id, event.target.id, positions]);
+        const token = localStorage.accessToken;
+
+        axios({
+          method: "get",
+          url: this.api.getPositions + event.target.id,
+          params: {},
+          data: {},
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ` + token,
+          },
         })
-        .catch(function (error) {
-          console.log(error);
-        });
+          .then((response) => {
+            let positions = response.data;
+            this.setPositions([company.id, event.target.id, positions]);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      } else {
+        event.target.setAttribute("open", "false");
+        event.target.style.transform = "rotate(0deg)";
+        this.setPositions([company.id, event.target.id, []]);
+      }
     },
 
     openUsers(company, department, event) {
-      const token = localStorage.accessToken;
+      if (event.target.getAttribute("open") === "false") {
+        event.target.setAttribute("open", "true");
+        event.target.style.transform = "rotate(-90deg)";
 
-      axios({
-        method: "get",
-        url: this.api.getUsers + event.target.id,
-        params: {},
-        data: {},
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          Authorization: `Bearer ` + token,
-        },
-      })
-        .then((response) => {
-          let users = response.data;
-          console.log(users);
-          this.setUsers([company.id, department.id, event.target.id, users]);
+        const token = localStorage.accessToken;
+
+        axios({
+          method: "get",
+          url: this.api.getUsers + event.target.id,
+          params: {},
+          data: {},
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ` + token,
+          },
         })
-        .catch(function (error) {
-          console.log(error);
-        });
+          .then((response) => {
+            let users = response.data;
+            console.log(users);
+            this.setUsers([company.id, department.id, event.target.id, users]);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      } else {
+        event.target.setAttribute("open", "false");
+        event.target.style.transform = "rotate(0deg)";
+        this.setUsers([company.id, department.id, event.target.id, []]);
+      }
     },
 
     changeCompany(company, event) {

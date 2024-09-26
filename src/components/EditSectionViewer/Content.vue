@@ -1,7 +1,7 @@
 <template>
   <div class="pageContent">
     <div class="pageContentText">
-      <div class="received_file__name">{{ section.name }}</div>
+      <div class="receivedFileName">{{ section.name }}</div>
       <div class="filename__inputbtn">
         <input
           type="text"
@@ -24,7 +24,7 @@
 <script>
 import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 import axios from "axios";
-import UserRights from "../EditSectionViewer/UserRights.vue";
+import UserRights from "./UserRights.vue";
 import SectionFileList from "./SectionFileList.vue";
 export default {
   props: [],

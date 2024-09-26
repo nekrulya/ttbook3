@@ -1,19 +1,23 @@
 <template>
   <Header />
-  <Book />
+  <div class="book">
+    <Content />
+  </div>
 </template>
 <script>
 import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 import axios from "axios";
 import Header from "@/components/Header.vue";
-import Book from "@/components/UserListViewer/Book.vue";
+import Content from "@/components/UserListViewer/Content.vue";
+import Headings from "@/components/Headings.vue";
 
 export default {
   name: "UserView",
   props: [],
   components: {
     Header,
-    Book,
+    Content,
+    Headings,
   },
 
   computed: {

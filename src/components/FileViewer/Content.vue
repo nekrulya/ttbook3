@@ -1,7 +1,7 @@
 <template>
   <div class="pageContent">
     <div class="pageContentText">
-      <div class="received_file__name">{{ file.name }}</div>
+      <div class="receivedFileName">{{ file.name }}</div>
       <div class="received_file__code ck-content" v-html="file.code"></div>
     </div>
   </div>
@@ -55,7 +55,7 @@ export default {
   color: #000000;
 }
 
-.received_file__name {
+.receivedFileName {
   font-family: "Roboto Mono";
   font-style: normal;
   font-weight: 600;

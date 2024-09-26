@@ -1,7 +1,7 @@
 <template>
   <div class="pageContent">
     <div class="pageContentText">
-      <div class="received_file__name">{{ file.name }}</div>
+      <div class="receivedFileName">{{ file.name }}</div>
       <div class="filename__inputbtn">
         <input
           type="text"
@@ -25,7 +25,6 @@
 <script>
 import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 import axios from "axios";
-// import Editor from "@/components/EditFileViewer/EditFileEditor.vue";
 import Editor from "@/components/Editor.vue";
 import UserRights from "../EditFileViewer/UserRights.vue";
 export default {
@@ -187,7 +186,7 @@ export default {
   color: #000000;
 }
 
-.received_file__name {
+.receivedFileName {
   font-family: "Roboto Mono";
   font-style: normal;
   font-weight: 600;
