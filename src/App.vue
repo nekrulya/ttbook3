@@ -1,5 +1,5 @@
 <template>
-  <nav>
+  <nav v-if="this.isAdmin">
     <router-link to="/home">Home</router-link> |
     <router-link to="/auth">Auth</router-link> |
     <router-link to="/GoogleDocTest">GoogleDocTest</router-link> |
@@ -8,6 +8,20 @@
   </nav>
   <router-view />
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      isAdmin: false,
+    };
+  },
+
+  mounted() {
+    this.isAdmin = localStorage.isAdmin === "true" ? true : false;
+  },
+};
+</script>
 
 <style>
 @import "../public/css/main.css";

@@ -2,7 +2,7 @@
   <div class="scrollbar">
     <div
       class="create_section"
-      v-if="!isCreatingSection"
+      v-if="!isCreatingSection && isAdmin"
       @click="openCreateSection"
     >
       Добавить раздел

@@ -21,5 +21,15 @@ export default {
     EmptyContent,
     Headings,
   },
+
+  data() {
+    return {
+      isAdmin: false,
+    };
+  },
+
+  mounted() {
+    this.isAdmin = localStorage.isAdmin === "true" ? true : false;
+  },
 };
 </script>
