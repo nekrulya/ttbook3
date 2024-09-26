@@ -472,9 +472,6 @@ export default {
   padding-top: 10px;
 }
 
-.companies {
-}
-
 .company {
   display: flex;
   flex-direction: column;

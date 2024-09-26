@@ -163,9 +163,6 @@ export default {
   margin-bottom: 20px;
 }
 
-.sectionName {
-}
-
 .pageText {
   /* background-color: #c6c6c6; */
 
