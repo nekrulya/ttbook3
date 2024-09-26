@@ -35,6 +35,14 @@ export default createStore({
       editSection: "section/update/",
       createSection: "section/create",
       deleteSection: "section/delete/",
+      addAllowedCompanySection: "section/addAllowedCompany",
+      removeAllowedCompanySection: "section/removeAllowedCompany",
+      addAllowedDepartmentSection: "section/addAllowedDepartment",
+      removeAllowedDepartmentSection: "section/removeAllowedDepartment",
+      addAllowedPositionSection: "section/addAllowedPosition",
+      removeAllowedPositionSection: "section/removeAllowedPosition",
+      addAllowedUserSection: "section/addAllowedUser",
+      removeAllowedUserSection: "section/removeAllowedUser",
       getCurrentUser: "user/getInfo",
       getAllUsers: "user/getAllUsers",
       getUserInfoById: "user/getInfo/",
@@ -303,6 +311,9 @@ export default createStore({
     setSection(state, section) {
       section.file_list.sort();
       state.section = section;
+    },
+    setSectionId(state, value) {
+      state.section.id = value;
     },
     setFilesWithoutSection(state, files_without_section) {
       files_without_section.sort();

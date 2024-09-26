@@ -1,12 +1,21 @@
 <template>
-  <div class="user_rights">
+  <div :class="[this.section.allowed_all ? 'allowedAllChecked' : 'allowedAll']">
+    <input
+      type="checkbox"
+      @change="allow_all($event)"
+      id="allowedAll"
+      :checked="this.section.allowed_all"
+    />
+    <label for="allowedAll">Доступен всем</label>
+  </div>
+  <div class="user_rights" v-if="!this.section.allowed_all">
     <ul class="companies">
       <li v-for="company in companies" :key="company.id" class="company">
         <div class="company_header">
           <input
             type="checkbox"
             :id="company.name"
-            :checked="this.file.allowed_companies?.includes(company.id)"
+            :checked="this.section.allowed_companies?.includes(company.id)"
             @change="changeCompany(company, $event)"
           />
           <label :for="company.name">{{ company.name }}</label>
@@ -16,6 +25,7 @@
             alt="open departments"
             :id="company.id"
             @click.stop="openDepartments"
+            open="false"
           />
         </div>
 
@@ -29,7 +39,7 @@
               <input
                 type="checkbox"
                 :id="dep.name"
-                :checked="this.file.allowed_departments.includes(dep.id)"
+                :checked="this.section.allowed_departments?.includes(dep.id)"
                 @change="changeDepartment(dep, $event)"
               />
               <label :for="dep.name">{{ dep.name }}</label>
@@ -39,6 +49,7 @@
                 alt="open positions"
                 :id="dep.id"
                 @click.stop="openPositions(company, $event)"
+                open="false"
               />
             </div>
 
@@ -48,7 +59,7 @@
                   <input
                     type="checkbox"
                     :id="pos.name"
-                    :checked="this.file.allowed_positions.includes(pos.id)"
+                    :checked="this.section.allowed_positions?.includes(pos.id)"
                     @change="changePosition(pos, $event)"
                   />
                   <label :for="pos.name">{{ pos.name }}</label>
@@ -58,6 +69,7 @@
                     alt="open users"
                     :id="pos.id"
                     @click.stop="openUsers(company, dep, $event)"
+                    open="false"
                   />
                 </div>
 
@@ -67,7 +79,7 @@
                       <input
                         type="checkbox"
                         :id="user.name"
-                        :checked="this.file.allowed_users.includes(user.id)"
+                        :checked="this.section.allowed_users?.includes(user.id)"
                         @change="changeUser(user, $event)"
                       />
                       <label :for="user.name">{{ user.fullname }}</label>
@@ -89,7 +101,9 @@ import axios from "axios";
 export default {
   props: {},
   data() {
-    return {};
+    return {
+      sectionAllowedAll: false,
+    };
   },
 
   components: {},
@@ -98,58 +112,20 @@ export default {
     ...mapState({
       api: (state) => state.api,
       companies: (state) => state.companies,
-      file: (state) => state.file,
+      section: (state) => state.section,
     }),
-    ...mapGetters({ getHeadingsFromPageHTML: "getHeadingsFromPageHTML" }),
   },
 
   methods: {
     ...mapMutations({
-      setFileCode: "setFileCode",
       setDepartments: "setDepartments",
       setPositions: "setPositions",
       setUsers: "setUsers",
-      setFile: "setFile",
+      setSection: "setSection",
     }),
 
-    addNewFile() {
-      this.setHTMLWithSelectors(this.file.code);
-      this.setFileCode(this.HTMLWithSelectors);
-      this.saveFileName();
-      const token = localStorage.accessToken;
-      console.log({
-        name: this.file.name,
-        url: null,
-        code: this.file.code,
-        allowed_all: true,
-        section_id: this.file.section_id,
-      });
-      axios({
-        method: "post",
-        url: this.api.createFile,
-        params: {},
-        data: {
-          name: this.file.name,
-          url: null,
-          code: this.file.code,
-          allowed_all: true,
-          section_id: this.file.section_id,
-        },
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          Authorization: `Bearer ` + token,
-        },
-      })
-        .then((response) => {
-          this.$router.push("/home");
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
-
     openDepartments(event) {
+      console.log(event.target);
       if (event.target.getAttribute("open") === "false") {
         event.target.setAttribute("open", "true");
         event.target.style.transform = "rotate(-90deg)";
@@ -251,11 +227,11 @@ export default {
       if (event.target.checked == false) {
         axios({
           method: "delete",
-          url: this.api.removeAllowedCompany,
+          url: this.api.removeAllowedCompanySection,
           params: {},
           data: {
             target_id: company.id,
-            file_id: this.file.id,
+            section_id: this.section.id,
           },
           headers: {
             "Content-Type": "application/json",
@@ -265,7 +241,7 @@ export default {
         })
           .then((response) => {
             let res = response.data;
-            this.setFile(res);
+            this.setSection(res);
             console.log(res);
           })
           .catch(function (error) {
@@ -274,11 +250,11 @@ export default {
       } else {
         axios({
           method: "post",
-          url: this.api.addAllowedCompany,
+          url: this.api.addAllowedCompanySection,
           params: {},
           data: {
             target_id: company.id,
-            file_id: this.file.id,
+            section_id: this.section.id,
           },
           headers: {
             "Content-Type": "application/json",
@@ -288,7 +264,7 @@ export default {
         })
           .then((response) => {
             let res = response.data;
-            this.setFile(res);
+            this.setSection(res);
             console.log(res);
           })
           .catch(function (error) {
@@ -303,11 +279,11 @@ export default {
       if (event.target.checked == false) {
         axios({
           method: "delete",
-          url: this.api.removeAllowedDepartment,
+          url: this.api.removeAllowedDepartmentSection,
           params: {},
           data: {
             target_id: dep.id,
-            file_id: this.file.id,
+            section_id: this.section.id,
           },
           headers: {
             "Content-Type": "application/json",
@@ -317,7 +293,7 @@ export default {
         })
           .then((response) => {
             let res = response.data;
-            this.setFile(res);
+            this.setSection(res);
             console.log(res);
           })
           .catch(function (error) {
@@ -326,11 +302,11 @@ export default {
       } else {
         axios({
           method: "post",
-          url: this.api.addAllowedDepartment,
+          url: this.api.addAllowedDepartmentSection,
           params: {},
           data: {
             target_id: dep.id,
-            file_id: this.file.id,
+            section_id: this.section.id,
           },
           headers: {
             "Content-Type": "application/json",
@@ -340,7 +316,7 @@ export default {
         })
           .then((response) => {
             let res = response.data;
-            this.setFile(res);
+            this.setSection(res);
             console.log(res);
           })
           .catch(function (error) {
@@ -355,11 +331,11 @@ export default {
       if (event.target.checked == false) {
         axios({
           method: "delete",
-          url: this.api.removeAllowedPosition,
+          url: this.api.removeAllowedPositionSection,
           params: {},
           data: {
             target_id: pos.id,
-            file_id: this.file.id,
+            section_id: this.section.id,
           },
           headers: {
             "Content-Type": "application/json",
@@ -369,7 +345,7 @@ export default {
         })
           .then((response) => {
             let res = response.data;
-            this.setFile(res);
+            this.setSection(res);
             console.log(res);
           })
           .catch(function (error) {
@@ -378,11 +354,11 @@ export default {
       } else {
         axios({
           method: "post",
-          url: this.api.addAllowedPosition,
+          url: this.api.addAllowedPositionSection,
           params: {},
           data: {
             target_id: pos.id,
-            file_id: this.file.id,
+            section_id: this.section.id,
           },
           headers: {
             "Content-Type": "application/json",
@@ -392,7 +368,7 @@ export default {
         })
           .then((response) => {
             let res = response.data;
-            this.setFile(res);
+            this.setSection(res);
             console.log(res);
           })
           .catch(function (error) {
@@ -407,11 +383,11 @@ export default {
       if (event.target.checked == false) {
         axios({
           method: "delete",
-          url: this.api.removeAllowedUser,
+          url: this.api.removeAllowedUserSection,
           params: {},
           data: {
             target_id: user.id,
-            file_id: this.file.id,
+            section_id: this.section.id,
           },
           headers: {
             "Content-Type": "application/json",
@@ -421,7 +397,7 @@ export default {
         })
           .then((response) => {
             let res = response.data;
-            this.setFile(res);
+            this.setSection(res);
             console.log(res);
           })
           .catch(function (error) {
@@ -430,11 +406,11 @@ export default {
       } else {
         axios({
           method: "post",
-          url: this.api.addAllowedUser,
+          url: this.api.addAllowedUserSection,
           params: {},
           data: {
             target_id: user.id,
-            file_id: this.file.id,
+            section_id: this.section.id,
           },
           headers: {
             "Content-Type": "application/json",
@@ -444,7 +420,66 @@ export default {
         })
           .then((response) => {
             let res = response.data;
-            this.setFile(res);
+            this.setSection(res);
+            console.log(res);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    },
+
+    allow_all(event) {
+      const token = localStorage.accessToken;
+      if (event.target.checked) {
+        this.sectionAllowedAll = true;
+        axios({
+          method: "put",
+          url: this.api.editSection + this.section.id,
+          params: {},
+          data: {
+            name: this.section.name,
+            url: "",
+            code: this.section.code,
+            allowed_all: this.sectionAllowedAll,
+            section_id: this.section.section_id,
+          },
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ` + token,
+          },
+        })
+          .then((response) => {
+            let res = response.data;
+            this.setSection(res);
+            console.log(res);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      } else {
+        this.sectionAllowedAll = false;
+        axios({
+          method: "put",
+          url: this.api.editSection + this.section.id,
+          params: {},
+          data: {
+            name: this.section.name,
+            url: "",
+            code: this.section.code,
+            allowed_all: this.sectionAllowedAll,
+            section_id: this.section.section_id,
+          },
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ` + token,
+          },
+        })
+          .then((response) => {
+            let res = response.data;
+            this.setSection(res);
             console.log(res);
           })
           .catch(function (error) {
@@ -454,11 +489,13 @@ export default {
     },
   },
 
-  mounted() {},
+  mounted() {
+    this.sectionAllowedAll = this.section.allowed_all;
+  },
 };
 </script>
 
-<style>
+<style scoped>
 .user_rights {
   width: 100%;
   height: auto;
@@ -496,6 +533,7 @@ export default {
 .arrow_down {
   height: 15px;
   cursor: pointer;
+  transition: transform 0.3s ease;
 }
 
 .position_header {
@@ -516,5 +554,19 @@ export default {
   line-height: 25px;
 
   margin-left: 60px;
+}
+
+.allowedAll {
+  margin-top: 30px;
+}
+
+.allowedAllChecked {
+  margin-top: 30px;
+  margin-bottom: 200px;
+}
+
+.allowedAll input,
+.allowedAllChecked input {
+  margin-right: 10px;
 }
 </style>

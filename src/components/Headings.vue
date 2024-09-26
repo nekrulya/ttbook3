@@ -53,7 +53,7 @@ export default {
 
   padding-left: 15px;
 
-  /* background-color: red; */
+  padding-right: 20px;
 }
 
 .parentHeading {

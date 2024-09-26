@@ -1,5 +1,14 @@
 <template>
-  <div class="user_rights">
+  <div :class="[this.file.allowed_all ? 'allowedAllChecked' : 'allowedAll']">
+    <input
+      type="checkbox"
+      @change="allow_all($event)"
+      id="allowedAll"
+      :checked="this.file.allowed_all"
+    />
+    <label for="allowedAll">Доступен всем</label>
+  </div>
+  <div class="user_rights" v-if="!this.file.allowed_all">
     <ul class="companies">
       <li v-for="company in companies" :key="company.id" class="company">
         <div class="company_header">
@@ -92,7 +101,9 @@ import axios from "axios";
 export default {
   props: {},
   data() {
-    return {};
+    return {
+      fileAllowedAll: false,
+    };
   },
 
   components: {},
@@ -114,43 +125,6 @@ export default {
       setUsers: "setUsers",
       setFile: "setFile",
     }),
-
-    addNewFile() {
-      this.setHTMLWithSelectors(this.file.code);
-      this.setFileCode(this.HTMLWithSelectors);
-      this.saveFileName();
-      const token = localStorage.accessToken;
-      console.log({
-        name: this.file.name,
-        url: null,
-        code: this.file.code,
-        allowed_all: true,
-        section_id: this.file.section_id,
-      });
-      axios({
-        method: "post",
-        url: this.api.createFile,
-        params: {},
-        data: {
-          name: this.file.name,
-          url: null,
-          code: this.file.code,
-          allowed_all: true,
-          section_id: this.file.section_id,
-        },
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          Authorization: `Bearer ` + token,
-        },
-      })
-        .then((response) => {
-          this.$router.push("/home");
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
 
     openDepartments(event) {
       if (event.target.getAttribute("open") === "false") {
@@ -455,13 +429,73 @@ export default {
           });
       }
     },
+    allow_all(event) {
+      const token = localStorage.accessToken;
+      if (event.target.checked) {
+        this.fileAllowedAll = true;
+        axios({
+          method: "put",
+          url: this.api.editFile + this.file.id,
+          params: {},
+          data: {
+            name: this.file.name,
+            url: "",
+            code: this.file.code,
+            allowed_all: this.fileAllowedAll,
+            section_id: this.file.section_id,
+          },
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ` + token,
+          },
+        })
+          .then((response) => {
+            let res = response.data;
+            this.setFile(res);
+            console.log(res);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      } else {
+        this.fileAllowedAll = false;
+        axios({
+          method: "put",
+          url: this.api.editFile + this.file.id,
+          params: {},
+          data: {
+            name: this.file.name,
+            url: "",
+            code: this.file.code,
+            allowed_all: this.fileAllowedAll,
+            section_id: this.file.section_id,
+          },
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ` + token,
+          },
+        })
+          .then((response) => {
+            let res = response.data;
+            this.setFile(res);
+            console.log(res);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    },
   },
 
-  mounted() {},
+  mounted() {
+    this.fileAllowedAll = this.file.allowed_all;
+  },
 };
 </script>
 
-<style>
+<style scoped>
 .user_rights {
   width: 100%;
   height: auto;
@@ -520,5 +554,19 @@ export default {
   line-height: 25px;
 
   margin-left: 60px;
+}
+
+.allowedAll {
+  margin-top: 30px;
+}
+
+.allowedAllChecked {
+  margin-top: 30px;
+  margin-bottom: 200px;
+}
+
+.allowedAll input,
+.allowedAllChecked input {
+  margin-right: 10px;
 }
 </style>

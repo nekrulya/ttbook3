@@ -81,7 +81,7 @@ export default {
           name: this.file.name,
           url: null,
           code: this.file.code,
-          allowed_all: true,
+          allowed_all: false,
           section_id: this.file.section_id,
         },
         headers: {

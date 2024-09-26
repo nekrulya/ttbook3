@@ -35,10 +35,14 @@ export default {
   methods: {
     ...mapMutations({
       setSection: "setSection",
+      setSectionId: "setSectionId",
       setFilesWithoutSection: "setFilesWithoutSection",
+      setCompanies: "setCompanies",
     }),
 
     loading() {
+      this.setSectionId(this.section_id);
+
       const token = localStorage.accessToken;
 
       axios({
@@ -74,6 +78,25 @@ export default {
         .then((response) => {
           let files = response.data;
           this.setFilesWithoutSection(files);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+      axios({
+        method: "get",
+        url: this.api.getAllCopmpanies,
+        params: {},
+        data: {},
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          Authorization: `Bearer ` + token,
+        },
+      })
+        .then((response) => {
+          let companies = response.data;
+          this.setCompanies(companies);
         })
         .catch(function (error) {
           console.log(error);

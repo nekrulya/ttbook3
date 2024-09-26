@@ -32,15 +32,13 @@
               ? namesObj.sectionName
               : "Без раздела"
           }}
-          <div
-            class="section_add_and_edit"
-            v-if="namesObj.sectionName != 'Без раздела'"
-          >
+          <div class="section_add_and_edit">
             <div class="section__edit" v-if="isAdmin">
               <img
                 src="@/assets/editing.png"
                 alt="edit section"
                 @click.stop="editSection(namesObj.section_id, $event)"
+                v-if="namesObj.sectionName != 'Без раздела'"
               />
             </div>
             <div class="section__addfile" v-if="isAdmin">
@@ -51,7 +49,10 @@
                 <img src="@/assets/add.png" alt="add file"
               /></a>
             </div>
-            <div class="section__delete" v-if="isAdmin">
+            <div
+              class="section__delete"
+              v-if="isAdmin && namesObj.sectionName != 'Без раздела'"
+            >
               <a @click="deleteSection(namesObj)">
                 <img src="@/assets/delete.png" alt="delete section"
               /></a>

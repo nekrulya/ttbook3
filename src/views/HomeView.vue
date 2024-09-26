@@ -3,7 +3,7 @@
   <div class="book">
     <Scrollbar />
     <EmptyContent />
-    <Headings />
+    <div class="emptyHeadings"></div>
   </div>
 </template>
 
@@ -33,3 +33,18 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.emptyHeadings {
+  width: 100%;
+  max-width: 272px;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  border-left: 2px solid #d9d9d9;
+  border-radius: 0.5px;
+  padding-left: 15px;
+}
+</style>
