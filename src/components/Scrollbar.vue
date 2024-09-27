@@ -172,6 +172,7 @@ export default {
             })
               .then((response) => {
                 this.setfileNames(response.data);
+                this.$router.push(`/home`);
               })
               .catch(function (error) {
                 console.log(error);

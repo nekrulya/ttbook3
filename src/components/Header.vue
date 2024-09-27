@@ -1,7 +1,7 @@
 <template>
   <header class="header">
     <div class="header__content">
-      <div class="logo">
+      <div class="logo" @click="goHome">
         <img src="@/assets/logo.png" alt="logo" />
       </div>
       <div class="account">
@@ -42,6 +42,9 @@ export default {
     },
     openUser() {
       this.$router.push("/user");
+    },
+    goHome() {
+      this.$router.push("/home");
     },
   },
 };
@@ -113,6 +116,14 @@ export default {
   align-items: start;
 
   color: #000000;
+}
+
+.logo {
+  cursor: pointer;
+}
+
+.logo:hover {
+  transform: scale(1.01);
 }
 
 .logout__btn {
