@@ -23,7 +23,7 @@ FROM nginx:alpine as production-stage
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 
 # # Копируем конфигурацию Nginx (опционально, если есть свои настройки)
-# COPY ./nginx.conf /etc/nginx/nginx.conf
+COPY ./nginx.conf /etc/nginx/nginx.conf
 
 # Экспонируем порт
 EXPOSE 80
