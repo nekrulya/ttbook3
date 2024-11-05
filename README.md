@@ -1,23 +1,12 @@
 # ttbook3
+Клиентская часть приложения для создания и редактирования файлов внутренней документации компании
 
-## Project setup
+## Требования
+* Mac / Linux / Windows
+* docker
 
+# Установка 
 ```
-npm install
+git clone https://github.com/nekrulya/ttbook3.git
+docker build -t имя_образа . && docker run --rm имя_образа
 ```
-
-### Compiles and hot-reloads for development
-
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-
-```
-npm run build
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
