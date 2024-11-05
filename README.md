@@ -5,7 +5,7 @@
 * Mac / Linux / Windows
 * docker
 
-# Установка 
+## Установка 
 ```
 git clone https://github.com/nekrulya/ttbook3.git
 docker build -t имя_образа . && docker run --rm имя_образа
